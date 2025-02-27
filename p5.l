@@ -3,17 +3,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Structure to store symbol table entries
 typedef struct {
     char name[100];
     int count;
 } Symbol;
 
-// Symbol table array
 Symbol symbol_table[1000];
 int symbol_count = 0;
 
-// Error tracking
 typedef struct {
     char lexeme[100];
     int line;
@@ -22,27 +19,23 @@ typedef struct {
 Error errors[100];
 int error_count = 0;
 
-// Line counter
 int line_no = 1;
 
-// Function to add a symbol to the symbol table
 void add_to_symbol_table(char *name) {
     int i;
-    // Check if symbol already exists
+
     for (i = 0; i < symbol_count; i++) {
         if (strcmp(symbol_table[i].name, name) == 0) {
             symbol_table[i].count++;
             return;
         }
     }
-    
-    // Add new symbol
+
     strcpy(symbol_table[symbol_count].name, name);
     symbol_table[symbol_count].count = 1;
     symbol_count++;
 }
 
-// Function to add an error
 void add_error(char *lexeme, int line) {
     strcpy(errors[error_count].lexeme, lexeme);
     errors[error_count].line = line;
