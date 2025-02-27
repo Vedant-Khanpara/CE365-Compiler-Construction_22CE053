@@ -44,7 +44,6 @@ void add_error(char *lexeme, int line) {
 
 %}
 
-/* Regular expressions for patterns */
 DIGIT       [0-9]
 LETTER      [a-zA-Z]
 ID          {LETTER}({LETTER}|{DIGIT}|_)*
