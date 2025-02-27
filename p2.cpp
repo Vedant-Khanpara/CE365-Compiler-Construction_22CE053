@@ -10,7 +10,7 @@ struct FiniteAutomaton {
     int initialState;
     unordered_map<int, unordered_map<char, int>> transitions;
 
-    // Constructor to initialize the FA
+    
     FiniteAutomaton(int states, int initial, const vector<int>& accepts)
         : numStates(states), initialState(initial), acceptingStates(accepts) {}
 
@@ -78,7 +78,7 @@ int main() {
             int toState;
             cout << i + 1 << " to " << symbol << " -> ";
             cin >> toState;
-            fa.addTransition(i + 1, symbol, toState);  // Add transition to the FA
+            fa.addTransition(i + 1, symbol, toState);   
         }
     }
 
