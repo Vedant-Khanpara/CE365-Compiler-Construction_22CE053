@@ -20,5 +20,5 @@ int main()
     yylex();                      
     printf("Number of vowels: %d\n", v);
     //printf("Number of alphabetic characters: %d\n", c);   
-    return 0;  // Return 0 to indicate successful execution
+    return 0;   
 }
