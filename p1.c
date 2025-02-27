@@ -9,7 +9,6 @@ int main() {
     printf("Enter a string: ");
     fgets(input, sizeof(input), stdin);
 
-    // Remove the newline character if it's at the end of the input
     size_t length = strlen(input);
     if (length > 0 && input[length - 1] == '\n') {
         input[length - 1] = '\0';
