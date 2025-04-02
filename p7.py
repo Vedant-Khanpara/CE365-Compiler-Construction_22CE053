@@ -1,6 +1,3 @@
-# Define the grammar as a dictionary.
-# Each nonterminal maps to a list of productions.
-# Each production is represented as a list of symbols.
 grammar = {
     'S': [['A', 'B', 'C'], ['D']],
     'A': [['a'], ['ε']],
@@ -11,34 +8,28 @@ grammar = {
 
 nonterminals = set(grammar.keys())
 
-# Helper function: Check if a symbol is terminal.
+ 
 def is_terminal(symbol):
-    # ε is treated as a special terminal representing epsilon.
+  
     return symbol not in nonterminals or symbol == 'ε'
 
-# Initialize FIRST sets.
+ 
 first = { nt: set() for nt in nonterminals }
-# Also for terminals, first(symbol) = { symbol }.
-# (We don't really need to store these for the algorithm.)
-
-# Iteratively compute FIRST sets.
+ 
 changed = True
 while changed:
     changed = False
     for nt in nonterminals:
         for production in grammar[nt]:
-            # For each production A -> X1 X2 ... Xn,
-            # add FIRST(X1) minus epsilon, then if X1 derives ε, add FIRST(X2), etc.
-            added_epsilon = True  # assume all symbols so far derive ε.
+            added_epsilon = True  
             for symbol in production:
                 if is_terminal(symbol):
-                    # If symbol is terminal:
+                    
                     if symbol != 'ε':
                         if symbol not in first[nt]:
                             first[nt].add(symbol)
                             changed = True
                     else:
-                        # symbol is ε
                         if 'ε' not in first[nt]:
                             first[nt].add('ε')
                             changed = True
@@ -46,7 +37,7 @@ while changed:
                     if not added_epsilon:
                         break
                 else:
-                    # symbol is nonterminal: add first(symbol) except ε.
+                    
                     before = len(first[nt])
                     first[nt].update(first[symbol] - {'ε'})
                     if len(first[nt]) > before:
@@ -61,9 +52,8 @@ while changed:
                     first[nt].add('ε')
                     changed = True
 
-# Initialize FOLLOW sets.
 follow = { nt: set() for nt in nonterminals }
-# For the start symbol, add '$'
+ 
 start_symbol = 'S'
 follow[start_symbol].add('$')
 
@@ -72,12 +62,9 @@ while changed:
     changed = False
     for nt in nonterminals:
         for production in grammar[nt]:
-            # For each production A -> X1 X2 ... Xn,
-            # for every nonterminal Xi, add FIRST(Xi+1...Xn) minus ε to FOLLOW(Xi)
-            # If Xi+1...Xn derives ε, then add FOLLOW(A) to FOLLOW(Xi)
-            for i, symbol in enumerate(production):
+             for i, symbol in enumerate(production):
                 if symbol in nonterminals:  # only nonterminals get follow set updates.
-                    # Compute FIRST of the rest of production.
+   
                     rest_first = set()
                     all_epsilon = True
                     for next_sym in production[i+1:]:
@@ -100,8 +87,6 @@ while changed:
                         follow[symbol].update(follow[nt])
                     if len(follow[symbol]) > before:
                         changed = True
-
-# For neat printing, sort the sets.
 def format_set(s):
     return "{" + ", ".join(sorted(s)) + "}"
 
