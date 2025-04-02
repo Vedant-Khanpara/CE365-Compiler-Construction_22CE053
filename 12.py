@@ -1,31 +1,14 @@
 import re
-
-# Node class for the AST.
 class Node:
     def __init__(self, kind, value=None, left=None, right=None):
         self.kind = kind    # 'num', 'var', or 'op'
         self.value = value  # For 'num' and 'var', it's the literal; for 'op', it's the operator.
         self.left = left
         self.right = right
-
-# -----------------------------
-# Tokenization
-# -----------------------------
 def tokenize(expr):
-    # This pattern matches numbers (integers or decimals), identifiers (variables), operators, and parentheses.
+ 
     token_pattern = r'\d+\.\d+|\d+|[A-Za-z_]\w*|[+\-*/^()]'
     return re.findall(token_pattern, expr)
-
-# -----------------------------
-# Parser using Recursive Descent
-# Grammar (with left recursion removed):
-#   E  → T E'
-#   E' → + T | - T | ε
-#   T  → F T'
-#   T' → * F | / F | ε
-#   F  → ( E ) | operand
-# where operand is either a number or a variable.
-# -----------------------------
 tokens = []
 pos = 0
 
@@ -71,19 +54,19 @@ def parse_F():
         return None
     token = tokens[pos]
     if token == '(':
-        pos += 1  # consume '('
+        pos += 1  
         node = parse_E()
         if node is None:
             return None
         if pos >= len(tokens) or tokens[pos] != ')':
-            return None  # missing closing parenthesis
-        pos += 1  # consume ')'
+            return None  
+        pos += 1   
         return node
     else:
-        # Check if token is a number or an identifier.
+      
         if re.fullmatch(r'\d+(\.\d+)?', token):
             pos += 1
-            # Convert to float if decimal, otherwise int.
+            
             if '.' in token:
                 return Node('num', float(token))
             else:
@@ -102,17 +85,13 @@ def parse_expression(expr):
     if ast is None or pos != len(tokens):
         return None
     return ast
-
-# -----------------------------
-# Constant Folding (AST Optimization)
-# -----------------------------
 def fold_constants(node):
     if node is None:
         return None
     if node.kind == 'op':
         node.left = fold_constants(node.left)
         node.right = fold_constants(node.right)
-        # If both children are constants, evaluate the operator.
+
         if node.left and node.left.kind == 'num' and node.right and node.right.kind == 'num':
             a = node.left.value
             b = node.right.value
@@ -124,7 +103,7 @@ def fold_constants(node):
                 elif node.value == '*':
                     res = a * b
                 elif node.value == '/':
-                    # Avoid division by zero.
+                   
                     res = a / b if b != 0 else float('inf')
                 elif node.value == '^':
                     res = a ** b
@@ -136,12 +115,8 @@ def fold_constants(node):
         else:
             return node
     else:
-        # For 'num' and 'var', no folding needed.
+        
         return node
-
-# -----------------------------
-# AST to String Conversion (minimal parentheses)
-# -----------------------------
 precedence = {
     '+': 1,
     '-': 1,
@@ -165,10 +140,6 @@ def ast_to_string(node, parent_prec=0):
             return f"({s})"
         return s
     return ""
-
-# -----------------------------
-# Main: Constant Folding Optimization
-# -----------------------------
 if __name__ == "__main__":
     print("Constant Folding Code Optimization")
     print("Enter an arithmetic expression (operands: integers/decimals/variables, operators: +, -, *, /, ^, and parentheses)")
@@ -177,7 +148,6 @@ if __name__ == "__main__":
         expr = input("Expression: ")
         if expr.lower() == "exit":
             break
-        # Normalize the expression by removing extra spaces.
         expr = expr.strip()
         ast = parse_expression(expr)
         if ast is None:
