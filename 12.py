@@ -1,8 +1,8 @@
 import re
 class Node:
     def __init__(self, kind, value=None, left=None, right=None):
-        self.kind = kind    # 'num', 'var', or 'op'
-        self.value = value  # For 'num' and 'var', it's the literal; for 'op', it's the operator.
+        self.kind = kind    
+        self.value = value   
         self.left = left
         self.right = right
 def tokenize(expr):
