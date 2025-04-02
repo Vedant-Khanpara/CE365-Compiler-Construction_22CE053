@@ -1,10 +1,9 @@
 import re
 
-# Global variables used by the parser.
 tokens = []
 pos = 0
 temp_counter = 0
-quadruple_table = []  # List to hold quadruples
+quadruple_table = []   
 
 def new_temp():
     """Generate a new temporary variable name."""
@@ -19,8 +18,6 @@ def tokenize(expr):
     """
     token_pattern = r'\d+\.\d+|\d+|[+\-*/()]'
     return re.findall(token_pattern, expr)
-
-# Parsing functions based on the grammar (with left recursion eliminated):
 
 def parse_E():
     """E → T E'"""
@@ -71,18 +68,18 @@ def parse_F():
         return None
     token = tokens[pos]
     if token == '(':
-        pos += 1  # consume '('
+        pos += 1  
         result = parse_E()
         if result is None:
             return None
         if pos >= len(tokens) or tokens[pos] != ')':
-            return None  # Missing closing parenthesis.
-        pos += 1  # consume ')'
+            return None  
+        pos += 1  
         return result
-    # Check if token is a digit (integer or decimal)
+    
     elif re.fullmatch(r'\d+(\.\d+)?', token):
         pos += 1
-        return token  # Return the number as is.
+        return token  
     else:
         return None
 
@@ -92,7 +89,7 @@ def generate_quadruple_table(expression):
     and returns the quadruple table if successful.
     """
     global tokens, pos, temp_counter, quadruple_table
-    # Normalize the expression: remove spaces and replace Unicode minus with ASCII '-'
+     
     expression = expression.replace(" ", "").replace("–", "-")
     tokens = tokenize(expression)
     pos = 0
@@ -100,12 +97,10 @@ def generate_quadruple_table(expression):
     quadruple_table = []
     
     result = parse_E()
-    # If parsing failed or not all tokens were consumed, the expression is invalid.
     if result is None or pos != len(tokens):
         return None
     return quadruple_table
 
-# Main loop: repeatedly read input expressions until "exit" is typed.
 if __name__ == "__main__":
     print("Intermediate Code Generation using Quadruple Table")
     print("Grammar:")
